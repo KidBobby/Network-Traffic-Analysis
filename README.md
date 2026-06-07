@@ -60,3 +60,34 @@ TARGET ENVIRONMENT AND PUBLIC ROUTING
 During the active capture session, the connection path was established to an unsecure captive portal testing environment.
 
 <img width="1920" height="1080" alt="Screenshot 2026-06-07 120630" src="https://github.com/user-attachments/assets/cf6108fa-df7e-4718-887d-74a29c87078f" />
+
+ This captures the user-side scenario where data protection is dropped completely, broadcasting the session over the network.
+
+
+
+ ANALYSIS AND DISCUSSION
+
+
+ The reassembled data stream shows critical information leaks from both the client side and the server side.
+ 
+
+ <img width="1920" height="1080" alt="Screenshot 2026-06-07 105636" src="https://github.com/user-attachments/assets/f9ddb98b-e161-41af-bdfc-63d4e9ec8b3f" />
+
+ This is the raw transcript of the conversation traveling over the network in clear text.
+Key Analytical Findings:
+• Client Device Fingerprinting: Inside the request headers (red text), the system leaks User-Agent: Mozilla/5.0 (Windows NT 10.0; ...) Edg/149.0.0.0. This tells anyone watching the network that the source device is running Windows 10/11 and using the Microsoft Edge browser version 149. This allows an attacker to profile the device and look up specific software exploits without running an aggressive scan.
+• Server Infrastructure Disclosure: The remote web server answers with Server: nginx/1.24.0 (Ubuntu). This leaks the exact backend software version and operating system of the website, giving attackers a roadmap of the server setup.
+• Payload Exposure: The actual underlying website structure travels completely unprotected.
+
+    This proves that an inline attacker could read or completely modify the webpage content in transit because there are no encryption integrity checks.
+
+CONCLUSION
+
+
+The analysis of network traffic, primarily contrasting protocols like TCP/TLS against plain HTTP, reveals typical communication behaviors alongside severe exposure risks that require attention. The concentration of plaintext data within standard HTTP streams highlights major security vulnerabilities, pointing to areas where data can be easily intercepted or modified mid-air.
+The identified patterns show that using unsecure protocols allows simple device fingerprinting and infrastructure mapping. To fix this, networks must enforce secure HTTPS connections everywhere and implement strict transport security policies to ensure data efficiency and eliminate simple security bottlenecks.
+
+    
+
+
+ 
